@@ -1,0 +1,12 @@
+<!-- prettier-ignore-start -->
+{% extends "base.html" %} {% block title %}保存完了{% endblock title%}
+{%block content%}
+<h1 class="text-3xl font-bold mb-4">保存しました！</h1>
+<p>数秒後にアップロードページに戻ります...</p>
+<script>
+  setTimeout(function () {
+    window.location.href = "{% url 'upload_receipts' %}";
+  }, 3000);
+</script>
+{% endblock content %}
+<!-- prettier-ignore-end -->

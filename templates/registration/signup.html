@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+
+{% block title %}新規登録{% endblock title %}
+
+
+{% block content %}
+
+<div class="border border-dark-subtle border-3 rounded-3 p-5 mx-auto" style="max-width: 540px">
+
+    <h3 class="mb-3 text-center">アカウント作成フォーム</h3>
+
+    <form action="" method="post">{% csrf_token %}
+
+        {# Signup form #}
+        {% comment %} {{form.as_p}} {# as_p:各フィールド情報をpタグとして出力してくれる #} {% endcomment %}
+        {% for field in form %}
+
+        <div class="mb-3">
+            {{field.label_tag}}
+            {{field}}
+            <span class="form-text">{{field.help_text}}</span>
+            {% comment %} 各フィールドのエラーをキャッチ {% endcomment %}
+            {% if field.errors %}
+            <div class="alert alert-danger" role="alert">{{field.errors}}</div>
+            {% endif %}
+        </div>
+        {% endfor %}
+
+        {% if form.non_field_errors %}
+        <div class="alert alert-danger" role="alert">
+        {% comment %} form.non_field_errors:フォーム全体で整合性が取れていなかったり、入力に欠損があったりするときにエラーをキャッチ {% endcomment %}
+            {{form.non_field_errors}}
+        </div>
+        {% endif %}
+        <div class="mb-3">
+            {# パスワード入力欄 #}
+            {% comment %} 下部分を消し忘れでフォームが重複してた笑 {% endcomment %}
+            {% comment %} <label for="id_password1">パスワード:</label>
+            <input type="password" id="id_password1" required class="form-control">
+        </div>
+        <div class="mb-3">
+            {# 確認用パスワード入力欄 #}
+            <label for="id_password2">パスワード(確認用):</label>
+            <input type="password" id="id_password2" required class="form-control">
+        </div> {% endcomment %}
+
+        {# Submit button #}
+        <div class="text-center">
+            {% comment %}
+            まだSignupViewは仮実装（TemplateViewでレンダリングするだけ）
+            なので、以下の"新規作成"ボタンは機能しません。
+            {% endcomment %}
+            <a href="{% url 'login' %}" class="btn btn-secondary">作成済みの方はこちら</a>
+            <button type="submit" class="btn btn-dark">新規作成</button>
+        </div>
+
+    </form>
+
+</div>
+
+{% endblock content %}

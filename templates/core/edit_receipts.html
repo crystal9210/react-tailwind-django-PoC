@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %}領収書の修正{% endblock title %}
+
+{% block content %}
+<h1 class="text-3xl font-bold mb-4">領収書の内容を修正</h1>
+<form id="edit-form">
+  <div id="receipts-content" class="mb-4">
+    <!-- 領収書のテキスト化された内容をここに表示します -->
+    <textarea class="w-full p-2 border border-gray-300 rounded" rows="10">
+ここにテキスト化された領収書の内容が表示されます。
+    </textarea>
+  </div>
+  <button type="submit" class="bg-blue-500 py-2 px-4 rounded">
+    保存
+  </button>
+  <button type="button" id="complete-button" class="bg-green-500 py-2 px-4 rounded mt-2">
+    編集を完了する
+  </button>
+</form>
+
+<script>
+document.getElementById('edit-form').addEventListener('submit', function(event) {
+  event.preventDefault(); // フォームのデフォルト動作を防止
+  // 保存ボタンが押されたときの処理をここに追加します
+  console.log('保存ボタンが押されました');
+});
+
+document.getElementById('complete-button').addEventListener('click', async function() {
+  const textData = document.querySelector('textarea').value;
+
+  // モックの非同期処理（テキストデータ送信）
+  await mockSendTextData(textData);
+
+  // 非同期処理が完了したら/save_completeに遷移
+  window.location.href = "/save_complete";
+});
+
+async function mockSendTextData(data) {
+  // ここで非同期に外部APIを呼び出す処理をモック
+  console.log('Sending text data:', data);
+  return new Promise(function(resolve) {
+    setTimeout(function() {
+      resolve();
+    }, 3000); // 3秒待機するモック
+  });
+}
+</script>
+{% endblock content %}

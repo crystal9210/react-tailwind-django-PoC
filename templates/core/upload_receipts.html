@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+
+{% block title %}領収書アップロード{% endblock title %}
+
+{% block content %}
+<h1 class="text-3xl font-bold mb-4">領収書をアップロード</h1>
+<form id="upload-form">
+  <div class="mb-4">
+    <label for="receipts" class="block text-gray-700 cursor-pointer bg-gray-300 py-2 px-4 rounded">
+      領収書選択
+      <input
+        type="file"
+        id="receipts"
+        name="receipts"
+        multiple
+        class="hidden"
+        accept="image/*"
+      />
+    </label>
+  </div>
+  <button type="submit" class="bg-blue-500 py-2 px-4 rounded">
+    アップロード
+  </button>
+</form>
+
+<div id="selected-files" class="mt-4">
+  <h2 class="text-xl font-bold mb-2">選択されたファイル</h2>
+</div>
+
+<div id="uploaded-files" class="mt-4" style="display:none;">
+  <h2 class="text-xl font-bold mb-2">アップロードされたファイル</h2>
+</div>
+
+<div id="extract-button-container" class="mt-4" style="display:none;">
+  <button id="extract-button" class="bg-green-500 py-2 px-4 rounded">
+    テキスト抽出
+  </button>
+</div>
+
+<script>
+let selectedFiles = [];
+let uploadedFiles = [];
+
+document.getElementById('receipts').addEventListener('change', function(event) {
+  selectedFiles = Array.from(event.target.files);
+  renderSelectedFiles();
+});
+
+document.getElementById('upload-form').addEventListener('submit', async function(event) {
+  event.preventDefault(); // フォームのデフォルト動作を防止
+
+  if (selectedFiles.length === 0) {
+    alert('ファイルを選択してください。');
+    return;
+  }
+
+  // モックの非同期処理（アップロード）
+  await mockUpload(selectedFiles);
+
+  // アップロードされたファイルリストを更新
+  uploadedFiles = uploadedFiles.concat(selectedFiles);
+  selectedFiles = [];
+
+  renderSelectedFiles();
+  renderUploadedFiles();
+
+  // ファイル選択情報をクリア
+  document.getElementById('receipts').value = '';
+
+  // テキスト抽出ボタンを表示
+  document.getElementById('extract-button-container').style.display = 'block';
+});
+
+document.getElementById('extract-button').addEventListener('click', async function() {
+  // テキスト抽出の非同期処理のモック
+  await mockExtractText();
+
+  // 非同期処理が完了したら/edit_receiptsに遷移
+  window.location.href = "/edit_receipts";
+});
+
+function renderSelectedFiles() {
+  const selectedFilesContainer = document.getElementById('selected-files');
+  selectedFilesContainer.innerHTML = '<h2 class="text-xl font-bold mb-2">選択されたファイル</h2>';
+
+  selectedFiles.forEach((file, index) => {
+    const fileItem = document.createElement('div');
+    fileItem.className = 'flex justify-between items-center mb-2';
+    fileItem.innerHTML = `
+      <span>${file.name}</span>
+      <button type="button" class="bg-red-500 text-white py-1 px-2 rounded" onclick="removeSelectedFile(${index})">削除</button>
+    `;
+    selectedFilesContainer.appendChild(fileItem);
+  });
+}
+
+function renderUploadedFiles() {
+  const uploadedFilesContainer = document.getElementById('uploaded-files');
+  uploadedFilesContainer.style.display = 'block';
+  uploadedFilesContainer.innerHTML = '<h2 class="text-xl font-bold mb-2">アップロードされたファイル</h2>';
+
+  uploadedFiles.forEach((file, index) => {
+    const fileItem = document.createElement('div');
+    fileItem.className = 'flex justify-between items-center mb-2';
+    fileItem.innerHTML = `
+      <span>${file.name}</span>
+      <button type="button" class="bg-red-500 text-red py-1 px-2 rounded" onclick="removeUploadedFile(${index})">削除</button>
+    `;
+    uploadedFilesContainer.appendChild(fileItem);
+  });
+}
+
+function removeSelectedFile(index) {
+  selectedFiles.splice(index, 1);
+  renderSelectedFiles();
+}
+
+function removeUploadedFile(index) {
+  uploadedFiles.splice(index, 1);
+  renderUploadedFiles();
+}
+
+async function mockUpload(files) {
+  // ここで非同期に外部APIを呼び出す処理をモック
+  console.log('Uploading files:', files);
+  return new Promise(function(resolve) {
+    setTimeout(function() {
+      resolve();
+    }, 3000); // 3秒待機するモック
+  });
+}
+
+async function mockExtractText() {
+  // ここで非同期にテキスト抽出の処理をモック
+  console.log('Extracting text from uploaded files');
+  return new Promise(function(resolve) {
+    setTimeout(function() {
+      resolve();
+    }, 3000); // 3秒待機するモック
+  });
+}
+</script>
+{% endblock content %}

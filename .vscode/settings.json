@@ -1,0 +1,14 @@
+{
+  "editor.defaultFormatter": null,
+  "editor.formatOnPaste": false,
+  "editor.formatOnSave": false,
+  "editor.formatOnType": false,
+  "files.trimTrailingWhitespace": false,
+  "emmet.includeLanguages": {
+    "django-html": "html"
+  },
+  "emmet.syntaxProfiles": {
+    "django-html": "html"
+  },
+  "emmet.triggerExpansionOnTab": true
+}
