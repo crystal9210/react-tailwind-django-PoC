@@ -1,8 +1,12 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block title %}領収書の修正{% endblock title %}
 
 {% block content %}
+{% block extra_js %}
+<script src="{% static 'frontend/upload_receipts.js' %}"></script>
+{% endblock extra_js %}
 <h1 class="text-3xl font-bold mb-4">領収書の内容を修正</h1>
 <form id="edit-form">
   <div id="receipts-content" class="mb-4">
