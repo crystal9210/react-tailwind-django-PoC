@@ -1,0 +1,14 @@
+[
+    {
+        "id": 1,
+        "date": "2023-05-30",
+        "amount": "1000",
+        "description": "Office Supplies"
+    },
+    {
+        "id": 2,
+        "date": "2023-06-01",
+        "amount": "5000",
+        "description": "Travel Expenses"
+    }
+]
