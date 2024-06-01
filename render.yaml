@@ -22,4 +22,4 @@ services:
         fromService:
           name: react-tailwind-django-PoC
           type: envVar
-    postDeploy: "python3 manage.py migrate"
+    postDeploy: "python manage.py migrate"
