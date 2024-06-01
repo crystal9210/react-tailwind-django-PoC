@@ -1,0 +1,25 @@
+services:
+  - type: web
+    name: react-tailwind-django-PoC
+    env: python
+    plan: free
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "gunicorn work_sample1.wsgi --log-file -"
+    envVars:
+      - key: DEBUG
+        value: False
+      - key: SECRET_KEY
+        fromService:
+          name: react-tailwind-django-PoC
+          type: envVar
+      - key: DATABASE_URL
+        fromService:
+          name: react-tailwind-django-PoC
+          type: envVar
+      - key: MYSITE_DOMAIN
+        value: "https://react-tailwind-django-poc.onrender.com"
+      - key: STRIPE_SECRET_KEY
+        fromService:
+          name: react-tailwind-django-PoC
+          type: envVar
+    postDeploy: "python manage.py migrate"
