@@ -18,7 +18,6 @@ if os.getenv('RENDER', 'False') == 'True':
     DATABASE_URL = env('DATABASE_URL')
     MYSITE_DOMAIN = env('MYSITE_DOMAIN')
     ALLOWED_HOSTS = ['*']  # 任意のユーザからのアクセスを許可；通常、きちんとした開発者なら許可しない
-    # Render用に追加の設定があればここに記述
 else:
     # ローカル環境
     environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
@@ -127,7 +126,6 @@ if os.getenv('RENDER', 'False') == 'True':
     # デプロイ環境 (Render)
     STATICFILES_DIRS = [
         os.path.join(BASE_DIR, "frontend/static"),
-        os.path.join(BASE_DIR, "static"),
     ]
     STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 else:
@@ -136,6 +134,7 @@ else:
         os.path.join(BASE_DIR, "frontend/static"),
         os.path.join(BASE_DIR, "static"),
     ]
+    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 MEDIA_URL = 'media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
