@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: react-tailwind-django-PoC
+    name: my-django-react-app  # サービス名を適切な名前に変更
     env: python
     plan: free
     buildCommand: './build.sh'
