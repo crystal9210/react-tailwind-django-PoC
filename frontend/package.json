@@ -7,7 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack --mode production",
     "dev": "webpack --mode development --watch",
-    "start": "serve -s build"
+    "start": "serve -s build",
+    "build:css": "tailwindcss build src/tailwind.css -o static/css/tailwind.css"
   },
   "keywords": [],
   "author": "",
