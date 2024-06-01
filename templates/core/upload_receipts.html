@@ -150,6 +150,13 @@ document.getElementById('upload-form').addEventListener('submit', async function
 });
 
 document.getElementById('extract-button').addEventListener('click', async function() {
+  // 画像ファイル情報をローカルストレージに保存
+  const fileData = uploadedFiles.map(file => ({
+    name: file.name,
+    url: URL.createObjectURL(file)
+  }));
+  localStorage.setItem('uploadedFiles', JSON.stringify(fileData));
+
   // テキスト抽出の非同期処理のモック
   await mockExtractText();
 
