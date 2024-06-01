@@ -126,8 +126,11 @@ if os.getenv('RENDER', 'False') == 'True':
     # デプロイ環境 (Render)
     STATICFILES_DIRS = [
         os.path.join(BASE_DIR, "frontend/static"),
+        os.path.join(BASE_DIR, "static"),
     ]
     STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+    # WhiteNoiseを使用して静的ファイルを提供する設定を追加
+    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 else:
     # ローカル環境
     STATICFILES_DIRS = [
@@ -135,6 +138,11 @@ else:
         os.path.join(BASE_DIR, "static"),
     ]
     STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+# Renderのビルド時に静的ファイルを収集するディレクトリを指定しないとエラーが出力されるので設定
+# すべての静的ファイル（DjangoのファイルとReactのビルド成果物）が staticfiles ディレクトリに収集され、Web サーバーから提供されるようになる
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+
 
 MEDIA_URL = 'media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
