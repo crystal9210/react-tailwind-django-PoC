@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack --mode production",
-    "dev": "webpack --mode development --watch"
+    "dev": "webpack --mode development --watch",
+    "start": "serve -s build"
   },
   "keywords": [],
   "author": "",
@@ -16,6 +17,7 @@
     "@babel/preset-env": "^7.24.4",
     "@babel/preset-react": "^7.24.1",
     "babel-loader": "^9.1.3",
+    "serve": "^14.2.3",
     "webpack": "^5.91.0",
     "webpack-cli": "^5.1.4"
   },
