@@ -127,6 +127,11 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "frontend/static"),
 ]
 
+
+# Renderのビルド時に静的ファイルを収集するディレクトリを指定しないとエラーが出力されるので設定
+# すべての静的ファイル（DjangoのファイルとReactのビルド成果物）が staticfiles ディレクトリに収集され、Web サーバーから提供されるようになる
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+
 MEDIA_URL = 'media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
