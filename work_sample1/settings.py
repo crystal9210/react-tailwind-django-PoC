@@ -126,16 +126,16 @@ STATIC_URL = '/staticfiles/'
 if os.getenv('RENDER', 'False') == 'True':
     # デプロイ環境 (Render)
     STATICFILES_DIRS = [
-        os.path.join(BASE_DIR, "frontend/static"),
+        os.path.join(BASE_DIR, "staticfiles/"),
     ]
-    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles/')
 else:
     # ローカル環境
     STATICFILES_DIRS = [
-        os.path.join(BASE_DIR, "frontend/static"),
+        os.path.join(BASE_DIR, "staticfiles/"),
         # os.path.join(BASE_DIR, "static"),
     ]
-    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles/')
 
 
 # Renderのビルド時に静的ファイルを収集するディレクトリを指定しないとエラーが出力されるので設定
