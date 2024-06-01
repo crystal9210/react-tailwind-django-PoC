@@ -5,6 +5,7 @@ set -o errexit
 pip install -r requirements.txt
 cd frontend
 npm install
+npm run build:css
 npm run build
 cd ..
 python3 manage.py collectstatic --no-input
