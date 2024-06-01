@@ -5,10 +5,10 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "webpack --mode production",
+    "build:css": "tailwindcss build src/css/tailwind.css -o static/css/tailwind.css && cp src/css/*.css static/css/",
+    "build": "npm run build:css && webpack --mode production",
     "dev": "webpack --mode development --watch",
-    "start": "serve -s build",
-    "build:css": "tailwindcss build src/tailwind.css -o static/css/tailwind.css"
+    "start": "serve -s build"
   },
   "keywords": [],
   "author": "",
@@ -24,6 +24,7 @@
   },
   "dependencies": {
     "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "react-dom": "^18.3.1",
+    "tailwindcss": "^3.4.3"
   }
 }
