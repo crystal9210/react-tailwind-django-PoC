@@ -17,6 +17,7 @@ if os.getenv('RENDER', 'False') == 'True':
     SECRET_KEY = env('SECRET_KEY')
     DATABASE_URL = env('DATABASE_URL')
     MYSITE_DOMAIN = env('MYSITE_DOMAIN')
+    # Render用に追加の設定があればここに記述
 else:
     # ローカル環境
     environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
@@ -29,7 +30,7 @@ else:
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-STRIPE_SECRET_KEY = env('STRIPE_SECRET_KEY')
+STRIPE_SECRET_KEY = env('STRIPE_SECRET_KEY', default='')  # ローカル環境で存在しない場合のためのデフォルト設定
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env('DEBUG')

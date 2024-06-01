@@ -1,1 +1,1 @@
-web: gunicorn react-tailwind-django-PoC.wsgi --log-file -
+web: gunicorn work_sample1.wsgi --log-file -
