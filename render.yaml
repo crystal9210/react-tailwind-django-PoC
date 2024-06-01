@@ -9,11 +9,17 @@ services:
       - key: DEBUG
         value: False
       - key: SECRET_KEY
-        fromDatabase: true
+        fromService:
+          name: react-tailwind-django-PoC
+          type: envVar
       - key: DATABASE_URL
-        fromDatabase: true
+        fromService:
+          name: react-tailwind-django-PoC
+          type: envVar
       - key: MYSITE_DOMAIN
         value: "https://react-tailwind-django-poc.onrender.com"
       - key: STRIPE_SECRET_KEY
-        fromDatabase: true
+        fromService:
+          name: react-tailwind-django-PoC
+          type: envVar
     postDeploy: "python3 manage.py migrate"
