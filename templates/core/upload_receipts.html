@@ -18,31 +18,109 @@
       />
     </label>
   </div>
-  <button type="submit" class="bg-blue-500 py-2 px-4 rounded">
+  <button type="submit" class="bg-blue-500 py-2 px-4 mb-4 rounded">
     アップロード
   </button>
 </form>
 
-<div id="selected-files" class="mt-4">
-  <h2 class="text-xl font-bold mb-2">選択されたファイル</h2>
-</div>
+<h2 class="text-xl font-bold mb-2 col-span-full">選択されたファイル</h2>
+<div id="selected-files" class="mt-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"></div>
 
-<div id="uploaded-files" class="mt-4" style="display:none;">
-  <h2 class="text-xl font-bold mb-2">アップロードされたファイル</h2>
-</div>
+<h2 class="text-xl font-bold mt-4 mb-2 col-span-full">アップロードされたファイル</h2>
+<div id="uploaded-files" class="mt-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"></div>
 
-<div id="extract-button-container" class="mt-4" style="display:none;">
+<div id="extract-button-container" class="mt-4">
   <button id="extract-button" class="bg-green-500 py-2 px-4 rounded">
     テキスト抽出
   </button>
 </div>
 
+<!-- 進行状況通知コンポーネント -->
+<div id="status-indicator" class="fixed top-0 left-0 p-2 bg-gray-300 rounded">
+  <span id="status-text">編集中</span>
+</div>
+
+<!-- 画像全画面表示用 -->
+<div id="fullscreen-overlay" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center hidden z-50">
+  <img id="fullscreen-image" src="" alt="Full Screen Image" class="max-w-full max-h-full">
+</div>
+
+<style>
+  .image-container {
+    position: relative;
+    width: 100%;
+    height: 200px; /* 統一した高さを設定 */
+    overflow: hidden;
+  }
+
+  .image-container img {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: cover;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1rem;
+  }
+
+  .grid-item {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .grid-item img {
+    width: 100%;
+    height: auto;
+  }
+
+  .grid-item .details {
+    padding: 0.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .status-complete {
+    background-color: #add8e6 !important; /* 水色 */
+  }
+
+  @media (max-width: 1024px) {
+    .grid {
+      grid-template-columns: repeat(auto-fill, minmax(33.33%, 1fr));
+    }
+  }
+
+  @media (max-width: 768px) {
+    .grid {
+      grid-template-columns: repeat(auto-fill, minmax(50%, 1fr));
+    }
+  }
+
+  @media (max-width: 640px) {
+    .grid {
+      grid-template-columns: repeat(auto-fill, minmax(100%, 1fr));
+    }
+  }
+</style>
+
 <script>
 let selectedFiles = [];
 let uploadedFiles = [];
+let loadingDotsInterval;
 
 document.getElementById('receipts').addEventListener('change', function(event) {
-  selectedFiles = Array.from(event.target.files);
+  const newFiles = Array.from(event.target.files);
+  selectedFiles = selectedFiles.concat(newFiles); // 新しく選択されたファイルを追加
   renderSelectedFiles();
 });
 
@@ -79,16 +157,31 @@ document.getElementById('extract-button').addEventListener('click', async functi
   window.location.href = "/edit_receipts";
 });
 
+// 選択したファイル群をグリッドとして用件に応じて見やすくレンダリングするための調整をする関数
 function renderSelectedFiles() {
   const selectedFilesContainer = document.getElementById('selected-files');
-  selectedFilesContainer.innerHTML = '<h2 class="text-xl font-bold mb-2">選択されたファイル</h2>';
+  selectedFilesContainer.innerHTML = ''; // 初期化
+
+  // タイトルを追加
+  // const title = document.createElement('h2');
+  // title.className = 'text-xl font-bold mb-2 col-span-full';
+  // title.innerText = '選択されたファイル';
+  // selectedFilesContainer.appendChild(title);
 
   selectedFiles.forEach((file, index) => {
     const fileItem = document.createElement('div');
-    fileItem.className = 'flex justify-between items-center mb-2';
+    fileItem.className = 'p-2 border rounded shadow relative grid-item';
     fileItem.innerHTML = `
-      <span>${file.name}</span>
-      <button type="button" class="bg-red-500 text-white py-1 px-2 rounded" onclick="removeSelectedFile(${index})">削除</button>
+      <div class="image-container">
+        <img src="${URL.createObjectURL(file)}" alt="${file.name}" class="cursor-pointer" 
+        ondblclick="showFullscreenImage('${URL.createObjectURL(file)}')" 
+        ontouchstart="handleTouchStart(event, '${URL.createObjectURL(file)}')">
+      </div>
+      <div class="details">
+        <span class="text-sm">${file.name}</span>
+        <button type="button" class="bg-red-500 text-white py-1 px-2 rounded" 
+        onclick="removeSelectedFile(${index})">削除</button>
+      </div>
     `;
     selectedFilesContainer.appendChild(fileItem);
   });
@@ -96,19 +189,27 @@ function renderSelectedFiles() {
 
 function renderUploadedFiles() {
   const uploadedFilesContainer = document.getElementById('uploaded-files');
-  uploadedFilesContainer.style.display = 'block';
-  uploadedFilesContainer.innerHTML = '<h2 class="text-xl font-bold mb-2">アップロードされたファイル</h2>';
+  uploadedFilesContainer.innerHTML = ''; // 初期化
 
   uploadedFiles.forEach((file, index) => {
     const fileItem = document.createElement('div');
-    fileItem.className = 'flex justify-between items-center mb-2';
+    fileItem.className = 'p-2 border rounded shadow relative grid-item';
     fileItem.innerHTML = `
-      <span>${file.name}</span>
-      <button type="button" class="bg-red-500 text-red py-1 px-2 rounded" onclick="removeUploadedFile(${index})">削除</button>
+      <div class="image-container">
+        <img src="${URL.createObjectURL(file)}" alt="${file.name}" class="cursor-pointer" 
+        ondblclick="showFullscreenImage('${URL.createObjectURL(file)}')" 
+        ontouchstart="handleTouchStart(event, '${URL.createObjectURL(file)}')">
+      </div>
+      <div class="details">
+        <span class="text-sm">${file.name}</span>
+        <button type="button" class="bg-red-500 text-white py-1 px-2 rounded" 
+        onclick="removeUploadedFile(${index})">削除</button>
+      </div>
     `;
     uploadedFilesContainer.appendChild(fileItem);
   });
 }
+
 
 function removeSelectedFile(index) {
   selectedFiles.splice(index, 1);
@@ -121,23 +222,103 @@ function removeUploadedFile(index) {
 }
 
 async function mockUpload(files) {
+  // 進行状況をアップデート
+  setStatus('アップロード中');
+
+  // Loading...のアニメーション開始
+  startLoadingAnimation();
+
   // ここで非同期に外部APIを呼び出す処理をモック
   console.log('Uploading files:', files);
   return new Promise(function(resolve) {
     setTimeout(function() {
+      stopLoadingAnimation();
+      setStatus('保存完了');
       resolve();
     }, 3000); // 3秒待機するモック
   });
 }
 
 async function mockExtractText() {
+  // 進行状況をアップデート
+  setStatus('テキスト抽出中');
+
+  // Loading...のアニメーション開始
+  startLoadingAnimation();
+
   // ここで非同期にテキスト抽出の処理をモック
   console.log('Extracting text from uploaded files');
   return new Promise(function(resolve) {
-    setTimeout(function() {
-      resolve();
+    setTimeout(async function() {
+      stopLoadingAnimation();
+      setStatus('抽出完了', 'status-complete'); // 状態を抽出完了に変更し、背景色を水色にする
+      await delay(1000); // 1秒待機
+      setStatus('保存完了');
+      window.location.href = "/edit_receipts";
+      resolve(); // Promiseが解決されて裏側でmockExtractTextが終了する
     }, 3000); // 3秒待機するモック
   });
 }
+
+function setStatus(status) {
+  document.getElementById('status-text').textContent = status;
+}
+
+function setStatus(status, additionalClass = '') {
+  const statusIndicator = document.getElementById('status-indicator');
+  const statusText = document.getElementById('status-text');
+  statusText.textContent = status;
+  if (additionalClass) {
+    statusIndicator.classList.add(additionalClass);
+  }
+}
+
+function delay(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+function startLoadingAnimation() {
+  const statusText = document.getElementById('status-text');
+  let dots = 0;
+
+  loadingDotsInterval = setInterval(() => {
+    dots = (dots + 1) % 4;
+    statusText.textContent = statusText.textContent.replace(/\.*$/, '.' + '.'.repeat(dots));
+  }, 500);
+}
+
+function stopLoadingAnimation() {
+  clearInterval(loadingDotsInterval);
+}
+
+// 画像を全画面表示
+function showFullscreenImage(src) {
+  const overlay = document.getElementById('fullscreen-overlay');
+  const fullscreenImage = document.getElementById('fullscreen-image');
+  fullscreenImage.src = src;
+  overlay.classList.remove('hidden');
+}
+
+// 画像をダブルクリックまたは長押しした時の処理
+function handleTouchStart(event, src) {
+  let touchDuration = 0;
+
+  const interval = setInterval(() => {
+    touchDuration += 100;
+    if (touchDuration >= 1000) {
+      clearInterval(interval);
+      showFullscreenImage(src);
+    }
+  }, 100);
+
+  event.target.addEventListener('touchend', () => {
+    clearInterval(interval);
+  });
+}
+
+// 全画面表示を終了
+document.getElementById('fullscreen-overlay').addEventListener('click', function() {
+  this.classList.add('hidden');
+});
 </script>
 {% endblock content %}
