@@ -121,7 +121,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
-STATIC_URL = '/static/'
+STATIC_URL = '/staticfiles/'
 # デプロイ環境かローカル環境かで設定を分ける
 if os.getenv('RENDER', 'False') == 'True':
     # デプロイ環境 (Render)
