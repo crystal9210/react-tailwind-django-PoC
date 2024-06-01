@@ -17,7 +17,7 @@ if os.getenv('RENDER', 'False') == 'True':
     SECRET_KEY = env('SECRET_KEY')
     DATABASE_URL = env('DATABASE_URL')
     MYSITE_DOMAIN = env('MYSITE_DOMAIN')
-    ALLOWED_HOSTS = [MYSITE_DOMAIN, 'react-tailwind-django-poc.onrender.com']
+    ALLOWED_HOSTS = ['*']  # 任意のユーザからのアクセスを許可；通常、きちんとした開発者なら許可しない
     # Render用に追加の設定があればここに記述
 else:
     # ローカル環境
