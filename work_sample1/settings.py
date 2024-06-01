@@ -26,7 +26,7 @@ else:
     SECRET_KEY = env('SECRET_KEY')
     DATABASE_URL = env('DATABASE_URL')
     MYSITE_DOMAIN = env('MYSITE_DOMAIN')
-    ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
+    ALLOWED_HOSTS = ['react-tailwind-django-poc.onrender.com', '127.0.0.1', 'localhost']
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
