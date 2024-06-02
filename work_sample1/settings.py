@@ -21,7 +21,7 @@ if os.getenv('RENDER', 'False') == 'True':
     STATICFILES_DIRS = [
         os.path.join(BASE_DIR, "frontend","static"),
     ]
-    STATIC_ROOT = os.path.join(BASE_DIR, '/staticfiles/')
+    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
     STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 else:
     # ローカル環境
@@ -43,7 +43,7 @@ STATIC_URL = '/static/'
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-STRIPE_SECRET_KEY = env('STRIPE_SECRET_KEY', default='')  # ローカル環境で存在しない場合のためのデフォルト設定
+STRIPE_SECRET_KEY = env('STRIPE_SECRET_KEY', default='') # ローカル環境で存在しない場合のためのデフォルト設定
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # DEBUG = env('DEBUG')
@@ -142,7 +142,7 @@ if os.getenv('RENDER', 'False') == 'True':
         os.path.join(BASE_DIR, "/frontend/static/frontend"),
         # os.path.join(BASE_DIR, "static"),
     ]
-    STATIC_ROOT = os.path.join(BASE_DIR, '/staticfiles/')
+    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
     # WhiteNoiseを使用して静的ファイルを提供する設定を追加
     STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 else:
