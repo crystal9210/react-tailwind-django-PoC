@@ -19,7 +19,9 @@ if os.getenv('RENDER', 'False') == 'True':
     MYSITE_DOMAIN = env('MYSITE_DOMAIN')
     ALLOWED_HOSTS = ['*']
     STATICFILES_DIRS = [
-        os.path.join(BASE_DIR, "frontend","static"),
+        os.path.join(BASE_DIR, "/frontend/static/css"),
+        os.path.join(BASE_DIR, "/frontend/static/images"),
+        os.path.join(BASE_DIR, "/frontend/static/frontend"),
     ]
     STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
     STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
@@ -137,9 +139,9 @@ USE_TZ = True
 # if os.getenv('RENDER', 'False') == 'True':
     # デプロイ環境 (Render)
     # STATICFILES_DIRS = [
-    #     os.path.join(BASE_DIR, "/frontend/static/css"),
-    #     os.path.join(BASE_DIR, "/frontend/static/images"),
-    #     os.path.join(BASE_DIR, "/frontend/static/frontend"),
+        # os.path.join(BASE_DIR, "/frontend/static/css"),
+        # os.path.join(BASE_DIR, "/frontend/static/images"),
+        # os.path.join(BASE_DIR, "/frontend/static/frontend"),
     #     # os.path.join(BASE_DIR, "static"),
     # ]
     # STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
