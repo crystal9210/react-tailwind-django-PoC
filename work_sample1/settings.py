@@ -157,12 +157,24 @@ else:
 # すべての静的ファイル（DjangoのファイルとReactのビルド成果物）が staticfiles ディレクトリに収集され、Web サーバーから提供されるようになる
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
-# ここに追記します
+# Static file finders
 STATICFILES_FINDERS = [
     'django.contrib.staticfiles.finders.FileSystemFinder',
-    # 必要に応じて追加のファインダー
-    # 'compressor.finders.CompressorFinder',
-    # 'django.contrib.staticfiles.finders.AppDirectoriesFinder',  # これを有効にすると重複警告が発生する可能性があります
+    # 'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    'compressor.finders.CompressorFinder',
+]
+
+# Compressor settings
+COMPRESS_ENABLED = True
+COMPRESS_URL = STATIC_URL
+COMPRESS_ROOT = STATIC_ROOT
+COMPRESS_STORAGE = 'compressor.storage.CompressorFileStorage'
+COMPRESS_CSS_FILTERS = [
+    'compressor.filters.css_default.CssAbsoluteFilter',
+    'compressor.filters.cssmin.CSSMinFilter',
+]
+COMPRESS_JS_FILTERS = [
+    'compressor.filters.jsmin.JSMinFilter',
 ]
 
 MEDIA_URL = 'media/'
