@@ -161,7 +161,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 STATICFILES_FINDERS = [
     'django.contrib.staticfiles.finders.FileSystemFinder',
     # 必要に応じて追加のファインダー
-    'compressor.finders.CompressorFinder',
+    # 'compressor.finders.CompressorFinder',
     # 'django.contrib.staticfiles.finders.AppDirectoriesFinder',  # これを有効にすると重複警告が発生する可能性があります
 ]
 
