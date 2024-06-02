@@ -19,7 +19,7 @@ if os.getenv('RENDER', 'False') == 'True':
     MYSITE_DOMAIN = env('MYSITE_DOMAIN')
     ALLOWED_HOSTS = ['*']
     STATICFILES_DIRS = [
-        os.path.join(BASE_DIR, "/frontend/static/"),
+        os.path.join(BASE_DIR, "frontend","static"),
     ]
     STATIC_ROOT = os.path.join(BASE_DIR, '/staticfiles/')
     STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
@@ -32,7 +32,7 @@ else:
     MYSITE_DOMAIN = env('MYSITE_DOMAIN')
     ALLOWED_HOSTS = ['react-tailwind-django-poc.onrender.com', '127.0.0.1', 'localhost']
     STATICFILES_DIRS = [
-        os.path.join(BASE_DIR, "frontend/static"),
+        os.path.join(BASE_DIR, "frontend","static"),
     ]
     STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
