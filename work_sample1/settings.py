@@ -17,7 +17,12 @@ if os.getenv('RENDER', 'False') == 'True':
     SECRET_KEY = env('SECRET_KEY')
     DATABASE_URL = env('DATABASE_URL')
     MYSITE_DOMAIN = env('MYSITE_DOMAIN')
-    ALLOWED_HOSTS = ['*']  # 任意のユーザからのアクセスを許可；通常、きちんとした開発者なら許可しない
+    ALLOWED_HOSTS = ['*']
+    STATICFILES_DIRS = [
+        os.path.join(BASE_DIR, "/frontend/static/"),
+    ]
+    STATIC_ROOT = os.path.join(BASE_DIR, '/staticf siles/')
+    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 else:
     # ローカル環境
     environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
@@ -26,6 +31,13 @@ else:
     DATABASE_URL = env('DATABASE_URL')
     MYSITE_DOMAIN = env('MYSITE_DOMAIN')
     ALLOWED_HOSTS = ['react-tailwind-django-poc.onrender.com', '127.0.0.1', 'localhost']
+    STATICFILES_DIRS = [
+        os.path.join(BASE_DIR, "frontend/static"),
+    ]
+    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+# 静的ファイルのURL
+STATIC_URL = '/static/'
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
