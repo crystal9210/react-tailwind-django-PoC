@@ -138,7 +138,7 @@ if os.getenv('RENDER', 'False') == 'True':
     # デプロイ環境 (Render)
     STATICFILES_DIRS = [
         os.path.join(BASE_DIR, "frontend/static"),
-        os.path.join(BASE_DIR, "static"),
+        # os.path.join(BASE_DIR, "static"),
     ]
     STATIC_ROOT = os.path.join(BASE_DIR, '/staticfiles/')
     # WhiteNoiseを使用して静的ファイルを提供する設定を追加
@@ -147,7 +147,7 @@ else:
     # ローカル環境
     STATICFILES_DIRS = [
         os.path.join(BASE_DIR, "frontend/static"),
-        os.path.join(BASE_DIR, "static"),
+        # os.path.join(BASE_DIR, "static"),
     ]
     STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
