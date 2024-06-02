@@ -18,10 +18,10 @@ if os.getenv('RENDER', 'False') == 'True':
     DATABASE_URL = env('DATABASE_URL')
     MYSITE_DOMAIN = env('MYSITE_DOMAIN')
     ALLOWED_HOSTS = ['*']
-    STATIC_ROOT = BASE_DIR / "staticfiles" # デプロイメントプロセスの一部として、静的ファイルを1箇所に集める場所の指定
+    STATIC_ROOT = BASE_DIR / "staticfiles" / # デプロイメントプロセスの一部として、静的ファイルを1箇所に集める場所の指定
     # 静的ファイルの検索パスを指定、下記で指定する場所に静的ファイルを記述・配置する
     STATICFILES_DIRS = [
-        BASE_DIR / "frontend" / "static",
+        BASE_DIR / "frontend" / "static" ,
     ]
     STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 else:
