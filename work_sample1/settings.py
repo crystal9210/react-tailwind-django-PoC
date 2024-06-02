@@ -21,7 +21,7 @@ if os.getenv('RENDER', 'False') == 'True':
     STATICFILES_DIRS = [
         os.path.join(BASE_DIR, "/frontend/static/"),
     ]
-    STATIC_ROOT = os.path.join(BASE_DIR, '/staticf siles/')
+    STATIC_ROOT = os.path.join(BASE_DIR, '/staticfiles/')
     STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 else:
     # ローカル環境
@@ -157,6 +157,13 @@ else:
 # すべての静的ファイル（DjangoのファイルとReactのビルド成果物）が staticfiles ディレクトリに収集され、Web サーバーから提供されるようになる
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
+# ここに追記します
+STATICFILES_FINDERS = [
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    # 必要に応じて追加のファインダー
+    'compressor.finders.CompressorFinder',
+    # 'django.contrib.staticfiles.finders.AppDirectoriesFinder',  # これを有効にすると重複警告が発生する可能性があります
+]
 
 MEDIA_URL = 'media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
