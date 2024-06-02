@@ -19,11 +19,11 @@ if os.getenv('RENDER', 'False') == 'True':
     MYSITE_DOMAIN = env('MYSITE_DOMAIN')
     ALLOWED_HOSTS = ['*']
     STATICFILES_DIRS = [
-        os.path.join(BASE_DIR, "/frontend/static/css"),
-        os.path.join(BASE_DIR, "/frontend/static/images"),
-        os.path.join(BASE_DIR, "/frontend/static/frontend"),
+        os.path.join(BASE_DIR, "/frontend/static/css/"),
+        os.path.join(BASE_DIR, "/frontend/static/images/"),
+        os.path.join(BASE_DIR, "/frontend/static/frontend/"),
     ]
-    STATIC_ROOT = '/opt/render/project/src/staticfiles'
+    STATIC_ROOT = '/opt/render/project/src/staticfiles/'
     STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 else:
     # ローカル環境
@@ -157,7 +157,7 @@ USE_TZ = True
 
 # Renderのビルド時に静的ファイルを収集するディレクトリを指定しないとエラーが出力されるので設定
 # すべての静的ファイル（DjangoのファイルとReactのビルド成果物）が staticfiles ディレクトリに収集され、Web サーバーから提供されるようになる
-STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+# STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
 # Static file finders
 STATICFILES_FINDERS = [
