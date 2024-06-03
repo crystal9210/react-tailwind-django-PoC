@@ -2,7 +2,7 @@
 {% load static %}
 
 <html lang="ja">
-  <head>
+  <h>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Test App | {% block title %}{% endblock title %}</title>
@@ -13,11 +13,11 @@
     <!-- Core theme CSS (includes Bootstrap) -->
     <link rel="stylesheet" href="{% static 'css/style.css' %}" />
     <!-- My CSS -->
-    <link rel="stylesheet" href="{% static 'css/header.css' %}" />
+    <link rel="stylesheet" href="{% static 'header.css' %}" />
     <!-- Tailwind CSS -->
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}" />
-    <link rel="stylesheet" href="{% static 'css/tailwind.css' %}" />
-  </head>
+    <link rel="stylesheet" href="{% static 'styles.css' %}" />
+    <link rel="stylesheet" href="{% static 'tailwind.css' %}" />
+  </h>
   <body>
     <!-- Navigation -->
     {% include "_navbar.html" %}
