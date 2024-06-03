@@ -7,8 +7,11 @@ from django.urls import reverse_lazy
 from django.views.generic import DeleteView,DetailView,ListView
 from django.views.generic.base import TemplateView, View #RedirectView
 from django.shortcuts import render # to import React
-
+from os import walk
+import json
 import stripe
+
+from work_sample1.settings import STATIC_ROOT
 
 from .forms import SearchForm
 from .models import Item,CartItem, Order
@@ -172,5 +175,13 @@ class EditReceiptsView(TemplateView):
 class SaveCompleteView(TemplateView):
     template_name = "core/save_complete.html"
 
+
+
 def render_react_view(request):
-    return render(request, 'core/react_index.html')
+    onlyfiles = []
+    for root, dirs, files in walk(STATIC_ROOT):
+        for d in dirs:
+            onlyfiles.append(root  + '/'+d)
+        for f in files:
+            onlyfiles.append(root  + '/'+f)
+    return HttpResponse(json.dumps(onlyfiles),content_type="application/json")
