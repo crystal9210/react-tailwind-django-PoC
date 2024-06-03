@@ -1,18 +1,18 @@
-services:
-  - type: web
-    name: react-tailwind-django-PoC
-    env: python
-    plan: free
-    buildCommand: './build.sh'
-    startCommand: "gunicorn work_sample1.wsgi:application --bind 0.0.0.0:$PORT --log-file -"
-    envVars:
-      - key: DEBUG
-        value: False
-      - key: SECRET_KEY
-        fromDatabase: true
-      - key: DATABASE_URL
-        fromDatabase: true
-      - key: MYSITE_DOMAIN
-        value: "https://react-tailwind-django-poc.onrender.com"
-      - key: STRIPE_SECRET_KEY
-        fromDatabase: true
+# services:
+#   - type: web
+#     name: react-tailwind-django-PoC
+#     env: python
+#     plan: free
+#     buildCommand: './build.sh'
+#     startCommand: "gunicorn work_sample1.wsgi:application --bind 0.0.0.0:$PORT --log-file -"
+#     envVars:
+#       - key: DEBUG
+#         value: False
+#       - key: SECRET_KEY
+#         fromDatabase: true
+#       - key: DATABASE_URL
+#         fromDatabase: true
+#       - key: MYSITE_DOMAIN
+#         value: "https://react-tailwind-django-poc.onrender.com"
+#       - key: STRIPE_SECRET_KEY
+#         fromDatabase: true
