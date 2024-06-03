@@ -23,7 +23,7 @@ if os.getenv('RENDER', 'False') == 'True':
     STATICFILES_DIRS = [
         BASE_DIR / "frontend" / "static" ,
     ]
-    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+    # STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 else:
     # ローカル環境
     environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
@@ -166,17 +166,17 @@ STATICFILES_FINDERS = [
 ]
 
 # Compressor settings
-COMPRESS_ENABLED = True
-COMPRESS_URL = STATIC_URL
-COMPRESS_ROOT = STATIC_ROOT
-COMPRESS_STORAGE = 'compressor.storage.CompressorFileStorage'
-COMPRESS_CSS_FILTERS = [
-    'compressor.filters.css_default.CssAbsoluteFilter',
-    'compressor.filters.cssmin.CSSMinFilter',
-]
-COMPRESS_JS_FILTERS = [
-    'compressor.filters.jsmin.JSMinFilter',
-]
+# COMPRESS_ENABLED = True
+# COMPRESS_URL = STATIC_URL
+# COMPRESS_ROOT = STATIC_ROOT
+# COMPRESS_STORAGE = 'compressor.storage.CompressorFileStorage'
+# COMPRESS_CSS_FILTERS = [
+#     'compressor.filters.css_default.CssAbsoluteFilter',
+#     'compressor.filters.cssmin.CSSMinFilter',
+# ]
+# COMPRESS_JS_FILTERS = [
+#     'compressor.filters.jsmin.JSMinFilter',
+# ]
 
 MEDIA_URL = 'media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
