@@ -7,7 +7,7 @@
 <h1 class="text-3xl font-bold mb-4">領収書の内容を修正</h1>
 
 <div id="accordion">
-  <!-- アコーディオンのコンテンツがここに追加されます -->
+<!-- アコーディオンのコンテンツがここに追加されます -->
 </div>
 
 <button type="button" id="complete-button" class="bg-green-500 py-2 px-4 rounded mt-4">編集を完了する</button>
@@ -150,8 +150,8 @@ document.getElementById('complete-button').addEventListener('click', async funct
     // モックの非同期処理（テキストデータ送信）
     await mockSendTextData(receiptData);
 
-    // 非同期処理が完了したら/save_completeに遷移
-    window.location.href = "/save_complete";
+    // 非同期処理が完了したら×：/save_complete→○：/confirm_receiptsに遷移
+    window.location.href = "/confirm_receipts";
 });
 
 async function mockSendTextData(data) {

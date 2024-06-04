@@ -1,12 +1,56 @@
-<!-- prettier-ignore-start -->
-{% extends "base.html" %} {% block title %}保存完了{% endblock title%}
-{%block content%}
-<h1 class="text-3xl font-bold mb-4">保存しました！</h1>
-<p>数秒後にアップロードページに戻ります...</p>
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}保存完了{% endblock title %}
+
+{% block content %}
+<h1 class="text-3xl font-bold mb-4">Excelへの保存が完了しました！</h1>
+
+<h2 class="text-xl font-bold mb-2">追加したデータ：</h2>
+<ul id="added-files-list" class="mb-4">
+  <!-- 追加したファイル名がここに追加されます -->
+</ul>
+
+<h2 class="text-xl font-bold mb-2">保存先ファイル：</h2>
+<p id="saved-file-name" class="mb-4"></p>
+
+<button type="button" id="back-to-upload-button" class="bg-green-500 text-white py-2 px-4 rounded mb-4">アップロード画面に戻る</button>
+<button type="button" id="go-to-obic-button" class="bg-orange-500 text-white py-2 px-4 rounded">オービックへ</button>
+
 <script>
-  setTimeout(function () {
-    window.location.href = "{% url 'upload_receipts' %}";
-  }, 3000);
+document.addEventListener('DOMContentLoaded', function() {
+    // ローカルストレージから選択されたファイルを取得
+    const selectedExcelFiles = JSON.parse(localStorage.getItem('savedFileName')) || [];
+    const addedFilesList = document.getElementById('added-files-list');
+    selectedExcelFiles.forEach(fileName => {
+        const li = document.createElement('li');
+        li.textContent = fileName;
+        addedFilesList.appendChild(li);
+    });
+
+    // ローカルストレージから保存先ファイル名を取得
+    const savedFileName = JSON.parse(localStorage.getItem('selectedExcelFiles')) || "保存先ファイル.xlsx";
+    const savedFileList = document.createElement('ul');
+    savedFileName.forEach(file => {
+        const li = document.createElement('li');
+        li.textContent = file;
+        savedFileList.appendChild(li);
+    });
+    document.getElementById('saved-file-name').appendChild(savedFileList);
+
+    document.getElementById('back-to-upload-button').addEventListener('click', function() {
+        localStorage.removeItem('selectedExcelFiles');
+        localStorage.removeItem('savedFileName');
+        window.location.href = "/upload_receipts";
+    });
+
+    document.getElementById('go-to-obic-button').addEventListener('click', function() {
+        alert('オービックへの遷移はモックです。');
+    });
+
+    // 他の画面に遷移した時のローカルストレージのリセット
+    localStorage.removeItem('selectedExcelFiles');
+    localStorage.removeItem('savedFileName');
+});
 </script>
 {% endblock content %}
-<!-- prettier-ignore-end -->

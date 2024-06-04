@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}CSVへの保存{% endblock title %}
+
+{% block content %}
+<h1 class="text-3xl font-bold mb-4">CSVへの保存</h1>
+
+<h2 class="text-xl font-bold mb-2">保存したCSVファイル：</h2>
+<ul id="csv-file-list" class="mb-4">
+  <!-- モックのCSVファイル名がここに追加されます -->
+</ul>
+
+<h2 class="text-xl font-bold mb-2">追加のExcelファイルを選択してください：</h2>
+<div class="relative mb-4">
+  <select id="file-selector" class="bg-gray-300 text-gray-700 py-2 px-4 rounded appearance-none">
+    <option value="" disabled selected>ファイルを選択</option>
+    <!-- オプションがここに追加されます -->
+  </select>
+  <button type="button" id="add-file-button" class="hidden bg-green-500 text-white py-2 px-4 rounded absolute right-0 top-0">追加</button>
+</div>
+
+<ul id="selected-files-list" class="mb-4">
+  <!-- 選択されたファイル名がここに追加されます -->
+</ul>
+
+<button type="button" id="add-to-excel-button" class="bg-green-500 text-white py-2 px-4 rounded mb-4">Excelに追加</button>
+
+<button type="button" id="back-to-upload-button" class="bg-blue-500 text-white py-2 px-4 rounded">アップロード画面に戻る</button>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const mockCsvFiles = ['file1.csv', 'file2.csv', 'file3.csv'];
+    const mockExcelFiles = ['ex1.xlsx', 'ex2.xlsx', 'ex3.xlsx', 'ex4.xlsx', 'ex5.xlsx', 'ex6.xlsx'];
+
+    // CSVファイル名をリストに追加
+    const csvFileList = document.getElementById('csv-file-list');
+    mockCsvFiles.forEach(fileName => {
+        const li = document.createElement('li');
+        li.textContent = fileName;
+        csvFileList.appendChild(li);
+    });
+
+    const fileSelector = document.getElementById('file-selector');
+    const addFileButton = document.getElementById('add-file-button');
+    const selectedFilesList = document.getElementById('selected-files-list');
+
+    // ローカルストレージから選択されたファイルを取得
+    let selectedExcelFiles = JSON.parse(localStorage.getItem('selectedExcelFiles')) || [];
+    renderFileSelectorOptions();
+    renderSelectedFiles();
+
+    fileSelector.addEventListener('change', function() {
+        addFileButton.classList.remove('hidden');
+    });
+
+    addFileButton.addEventListener('click', function() {
+        const selectedFile = fileSelector.value;
+        if (selectedFile) {
+            addSelectedFile(selectedFile);
+            fileSelector.selectedIndex = 0; // デフォルトのオプションに戻す
+            addFileButton.classList.add('hidden');
+            renderFileSelectorOptions(); // オプションを更新
+        }
+    });
+
+    function addSelectedFile(fileName) {
+        selectedExcelFiles.push(fileName);
+        localStorage.setItem('selectedExcelFiles', JSON.stringify(selectedExcelFiles));
+        renderSelectedFiles();
+    }
+
+    function renderSelectedFiles() {
+        selectedFilesList.innerHTML = ''; // 初期化
+        selectedExcelFiles.forEach((fileName, index) => {
+            const li = document.createElement('li');
+            li.classList.add('flex', 'justify-between', 'items-center', 'mb-2');
+            li.innerHTML = `
+                <span>${fileName}</span>
+                <button type="button" class="bg-red-500 text-white py-1 px-2 rounded">削除</button>
+            `;
+            li.querySelector('button').addEventListener('click', function() {
+                selectedExcelFiles.splice(index, 1);
+                localStorage.setItem('selectedExcelFiles', JSON.stringify(selectedExcelFiles));
+                renderSelectedFiles();
+                renderFileSelectorOptions(); // オプションを更新
+            });
+            selectedFilesList.appendChild(li);
+        });
+    }
+
+    function renderFileSelectorOptions() {
+        fileSelector.innerHTML = '<option value="" disabled selected>ファイルを選択</option>'; // 初期化
+        mockExcelFiles.forEach(fileName => {
+            if (!selectedExcelFiles.includes(fileName)) {
+                const option = document.createElement('option');
+                option.value = fileName;
+                option.textContent = fileName;
+                fileSelector.appendChild(option);
+            }
+        });
+    }
+
+    document.getElementById('add-to-excel-button').addEventListener('click', function() {
+        localStorage.setItem('selectedExcelFiles', JSON.stringify(selectedExcelFiles));
+        localStorage.setItem('savedFileName', JSON.stringify(mockCsvFiles)); // 保存先ファイル名をローカルストレージに保存
+        window.location.href = "/save_complete";
+    });
+
+    document.getElementById('back-to-upload-button').addEventListener('click', function() {
+        localStorage.removeItem('selectedExcelFiles');
+        window.location.href = "/upload_receipts";
+    });
+});
+</script>
+{% endblock content %}

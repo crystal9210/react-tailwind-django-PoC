@@ -172,6 +172,12 @@ class UploadReceiptsView(TemplateView):
 class EditReceiptsView(TemplateView):
     template_name = "core/edit_receipts.html"
 
+class ConfirmReceiptsView(TemplateView):
+    template_name = "core/confirm_receipts.html"
+
+class SaveToCSVView(TemplateView):
+    template_name = "core/save_to_csv.html"
+
 class SaveCompleteView(TemplateView):
     template_name = "core/save_complete.html"
 
