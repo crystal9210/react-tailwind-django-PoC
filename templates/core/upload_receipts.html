@@ -36,8 +36,15 @@
 </div>
 
 <!-- 進行状況通知コンポーネント -->
-<div id="status-indicator" class="fixed top-0 left-0 p-2 bg-gray-300 rounded">
+<div id="status-indicator" class="fixed p-2 bg-gray-300 rounded" style="top:12px; left: 12px;">
   <span id="status-text">編集中</span>
+</div>
+
+<!-- エラーメッセージ表示領域 -->
+<div id="error-message-container" class="relative" style="top:4px;">
+  <div id="error-message" class="absolute bottom-4 right-4 bg-red-500 text-white px-4 py-2 rounded hidden">
+    アップロードしていない画像ファイルがあります！
+  </div>
 </div>
 
 <!-- 画像全画面表示用 -->
@@ -46,6 +53,15 @@
 </div>
 
 <style>
+/* エラーメッセージを他の領域に干渉することなく表示するためのcssクラス*2を最初に記述 */
+  .relative {
+    position: relative;
+  }
+
+  .absolute {
+    position: absolute;
+  }
+
   .image-container {
     position: relative;
     width: 100%;
@@ -149,12 +165,20 @@ document.getElementById('upload-form').addEventListener('submit', async function
   document.getElementById('extract-button-container').style.display = 'block';
 });
 
+// 今回はモック処理で次のページに画像ファイル本体とファイル名を渡す必要があるのでブラウザのローカルストレージでモックで渡すように処理する
 document.getElementById('extract-button').addEventListener('click', async function() {
+  // アップロードしていないファイルがあるとき処理が進行しないようにする
+  if(selectedFiles.length > 0){
+    showError();
+    return;
+  }
+
   // 画像ファイル情報をローカルストレージに保存
-  const fileData = uploadedFiles.map(file => ({
-    name: file.name,
-    url: URL.createObjectURL(file)
-  }));
+  const fileData = await Promise.all(uploadedFiles.map(file => new Promise(resolve => {
+    const reader = new FileReader();
+    reader.onload = () => resolve({ name: file.name, data: reader.result });
+    reader.readAsDataURL(file);
+  })));
   localStorage.setItem('uploadedFiles', JSON.stringify(fileData));
 
   // テキスト抽出の非同期処理のモック
@@ -163,6 +187,7 @@ document.getElementById('extract-button').addEventListener('click', async functi
   // 非同期処理が完了したら/edit_receiptsに遷移
   window.location.href = "/edit_receipts";
 });
+
 
 // 選択したファイル群をグリッドとして用件に応じて見やすくレンダリングするための調整をする関数
 function renderSelectedFiles() {
@@ -327,5 +352,16 @@ function handleTouchStart(event, src) {
 document.getElementById('fullscreen-overlay').addEventListener('click', function() {
   this.classList.add('hidden');
 });
+
+// 引数に応じてエラーメッセージをidで結びつけられた領域に表示するための関数；メッセージは呼び出し下の関数から引数で受け取る
+function showError(message) {
+  const errorMessage = document.getElementById('error-message');
+  // errorMessage.textContent = message;
+  errorMessage.classList.remove('hidden');
+  setTimeout(() => {
+    errorMessage.classList.add('hidden');
+  }, 3000); // 3秒後に非表示にする
+}
+
 </script>
 {% endblock content %}

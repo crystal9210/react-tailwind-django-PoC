@@ -4,85 +4,113 @@
 {% block title %}領収書の修正{% endblock title %}
 
 {% block content %}
-{% comment %}
-{% block extra_js %}
-<script src="{% static 'frontend/upload_receipts.js' %}"></script>
-{% endblock extra_js %}
-{% endcomment %}
 <h1 class="text-3xl font-bold mb-4">領収書の内容を修正</h1>
-<form id="edit-form">
-  <div id="receipts-content" class="mb-4">
-    <label for="company" class="block text-gray-700">会社名:</label>
-    <textarea id="company" class="w-full p-2 border border-gray-300 rounded" rows="1"></textarea>
 
-    <label for="date" class="block text-gray-700 mt-4">日付:</label>
-    <textarea id="date" class="w-full p-2 border border-gray-300 rounded" rows="1"></textarea>
+<div id="accordion">
+  <!-- アコーディオンのコンテンツがここに追加されます -->
+</div>
 
-    <label for="items" class="block text-gray-700 mt-4">項目:</label>
-    <div id="items">
-      <!-- 項目の編集フィールドがここに追加されます -->
-    </div>
-    <button type="button" id="add-item" class="bg-blue-500 py-2 px-4 rounded mt-2">項目を追加</button>
-
-    <label for="total" class="block text-gray-700 mt-4">合計:</label>
-    <textarea id="total" class="w-full p-2 border border-gray-300 rounded" rows="1" readonly></textarea>
-  </div>
-  <button type="submit" class="bg-blue-500 py-2 px-4 rounded">保存</button>
-  <button type="button" id="complete-button" class="bg-green-500 py-2 px-4 rounded mt-2">編集を完了する</button>
-</form>
+<button type="button" id="complete-button" class="bg-green-500 py-2 px-4 rounded mt-4">編集を完了する</button>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    const mockReceiptData = {
-        company: "サンプル株式会社",
-        date: "2024-05-31",
-        items: [
-            { name: "商品1", price: 1000 },
-            { name: "商品2", price: 2000 }
-        ],
-        total: 3000
-    };
+    const uploadedFiles = JSON.parse(localStorage.getItem('uploadedFiles')) || [];
 
-    document.getElementById('company').value = mockReceiptData.company;
-    document.getElementById('date').value = mockReceiptData.date;
-
-    mockReceiptData.items.forEach((item, index) => {
-        addItemField(item.name, item.price, index);
-    });
-
-    calculateTotal();
-
-    document.getElementById('add-item').addEventListener('click', function() {
-        addItemField('', '', document.querySelectorAll('.item-field').length);
+    uploadedFiles.forEach((fileData, index) => {
+        addAccordionItem(fileData, index);
     });
 });
 
-function addItemField(name, price, index) {
-    const itemDiv = document.createElement('div');
-    itemDiv.classList.add('item-field', 'mb-4');
-    itemDiv.innerHTML = `
-        <label for="item-name-${index}" class="block text-gray-700">項目名:</label>
-        <textarea id="item-name-${index}" class="w-full p-2 border border-gray-300 rounded" rows="1">${name}</textarea>
-        
-        <label for="item-price-${index}" class="block text-gray-700 mt-2">価格:</label>
-        <textarea id="item-price-${index}" class="w-full p-2 border border-gray-300 rounded" rows="1">${price}</textarea>
+function addAccordionItem(fileData, index) {
+    const accordion = document.getElementById('accordion');
 
-        <button type="button" class="remove-item bg-red-500 py-1 px-2 rounded mt-2" data-index="${index}">削除</button>
+    const item = document.createElement('div');
+    item.classList.add('accordion-item', 'mb-4', 'border', 'border-gray-300', 'rounded');
+    item.innerHTML = `
+        <div class="accordion-header cursor-pointer bg-gray-200 p-4" onclick="toggleAccordion(${index})">
+            <h2 class="text-xl">${fileData.name}</h2>
+        </div>
+        <div class="accordion-content p-4 hidden" id="accordion-content-${index}">
+            <img src="${fileData.data}" alt="${fileData.name}" class="mb-4">
+            <form class="edit-form">
+                <div>
+                    <label for="company-${index}" class="block text-gray-700">会社名:</label>
+                    <textarea id="company-${index}" class="w-full p-2 border border-gray-300 rounded" rows="1">サンプル株式会社</textarea>
+                </div>
+                <div>
+                    <label for="date-${index}" class="block text-gray-700 mt-4">日付:</label>
+                    <textarea id="date-${index}" class="w-full p-2 border border-gray-300 rounded" rows="1">2024-05-31</textarea>
+                </div>
+                <div>
+                    <label for="items-${index}" class="block text-gray-700 mt-4">項目:</label>
+                    <div id="items-${index}">
+                        <div class="item-field mb-4">
+                            <label for="item-name-${index}-0" class="block text-gray-700">項目名:</label>
+                            <textarea id="item-name-${index}-0" class="w-full p-2 border border-gray-300 rounded" rows="1">商品1</textarea>
+                            <label for="item-price-${index}-0" class="block text-gray-700 mt-2">価格:</label>
+                            <textarea id="item-price-${index}-0" class="w-full p-2 border border-gray-300 rounded" rows="1">1000</textarea>
+                        </div>
+                        <div class="item-field mb-4">
+                            <label for="item-name-${index}-1" class="block text-gray-700">項目名:</label>
+                            <textarea id="item-name-${index}-1" class="w-full p-2 border border-gray-300 rounded" rows="1">商品2</textarea>
+                            <label for="item-price-${index}-1" class="block text-gray-700 mt-2">価格:</label>
+                            <textarea id="item-price-${index}-1" class="w-full p-2 border border-gray-300 rounded" rows="1">2000</textarea>
+                        </div>
+                    </div>
+                    <button type="button" onclick="addItemField(${index})" class="bg-blue-500 py-2 px-4 rounded mt-2">項目を追加</button>
+                </div>
+                <div>
+                    <label for="total-${index}" class="block text-gray-700 mt-4">合計:</label>
+                    <textarea id="total-${index}" class="w-full p-2 border border-gray-300 rounded" rows="1" readonly>3000</textarea>
+                </div>
+            </form>
+        </div>
     `;
-    document.getElementById('items').appendChild(itemDiv);
+    accordion.appendChild(item);
 
-    itemDiv.querySelector('.remove-item').addEventListener('click', function() {
-        itemDiv.remove();
-        calculateTotal();
-    });
+    calculateTotal(index);
 
-    itemDiv.querySelector(`#item-price-${index}`).addEventListener('input', function() {
-        calculateTotal();
+    // 項目の価格が変更された場合に合計を再計算
+    document.querySelectorAll(`#accordion-content-${index} .item-field textarea[id^="item-price-"]`).forEach(priceField => {
+        priceField.addEventListener('input', function() {
+            calculateTotal(index);
+        });
     });
 }
 
-function calculateTotal() {
-    const prices = document.querySelectorAll('.item-field textarea[id^="item-price-"]');
+function toggleAccordion(index) {
+    const content = document.getElementById(`accordion-content-${index}`);
+    content.classList.toggle('hidden');
+}
+
+function addItemField(index) {
+    const itemsDiv = document.getElementById(`items-${index}`);
+    const itemCount = itemsDiv.querySelectorAll('.item-field').length;
+
+    const itemDiv = document.createElement('div');
+    itemDiv.classList.add('item-field', 'mb-4');
+    itemDiv.innerHTML = `
+        <label for="item-name-${index}-${itemCount}" class="block text-gray-700">項目名:</label>
+        <textarea id="item-name-${index}-${itemCount}" class="w-full p-2 border border-gray-300 rounded" rows="1"></textarea>
+        <label for="item-price-${index}-${itemCount}" class="block text-gray-700 mt-2">価格:</label>
+        <textarea id="item-price-${index}-${itemCount}" class="w-full p-2 border border-gray-300 rounded" rows="1"></textarea>
+        <button type="button" class="remove-item bg-red-500 py-1 px-2 rounded mt-2" onclick="removeItemField(this, ${index})">削除</button>
+    `;
+    itemsDiv.appendChild(itemDiv);
+
+    // 項目の価格が変更された場合に合計を再計算
+    itemDiv.querySelector(`textarea[id^="item-price-"]`).addEventListener('input', function() {
+        calculateTotal(index);
+    });
+}
+
+function removeItemField(button, index) {
+    button.closest('.item-field').remove();
+    calculateTotal(index);
+}
+
+function calculateTotal(index) {
+    const prices = document.querySelectorAll(`#accordion-content-${index} .item-field textarea[id^="item-price-"]`);
     let total = 0;
     prices.forEach(priceField => {
         const price = parseFloat(priceField.value);
@@ -90,39 +118,37 @@ function calculateTotal() {
             total += price;
         }
     });
-    document.getElementById('total').value = total;
+    document.getElementById(`total-${index}`).value = total;
 }
 
-document.getElementById('edit-form').addEventListener('submit', function(event) {
-    event.preventDefault(); // フォームのデフォルト動作を防止
-    // 保存ボタンが押されたときの処理をここに追加します
-    console.log('保存ボタンが押されました');
-});
-
 document.getElementById('complete-button').addEventListener('click', async function() {
-    const company = document.getElementById('company').value;
-    const date = document.getElementById('date').value;
+    const accordionItems = document.querySelectorAll('.accordion-item');
 
-    const items = [];
-    document.querySelectorAll('.item-field').forEach((itemField, index) => {
-        const name = itemField.querySelector(`#item-name-${index}`).value;
-        const price = parseFloat(itemField.querySelector(`#item-price-${index}`).value);
-        if (!isNaN(price)) {
-            items.push({ name: name, price: price });
-        }
+    const receiptData = Array.from(accordionItems).map((item, index) => {
+        const company = document.getElementById(`company-${index}`).value;
+        const date = document.getElementById(`date-${index}`).value;
+        const items = [];
+
+        document.querySelectorAll(`#accordion-content-${index} .item-field`).forEach((itemField, itemIndex) => {
+            const name = itemField.querySelector(`#item-name-${index}-${itemIndex}`).value;
+            const price = parseFloat(itemField.querySelector(`#item-price-${index}-${itemIndex}`).value);
+            if (!isNaN(price)) {
+                items.push({ name: name, price: price });
+            }
+        });
+
+        const total = parseFloat(document.getElementById(`total-${index}`).value);
+
+        return {
+            company: company,
+            date: date,
+            items: items,
+            total: total
+        };
     });
 
-    const total = parseFloat(document.getElementById('total').value);
-
-    const textData = {
-        company: company,
-        date: date,
-        items: items,
-        total: total
-    };
-
     // モックの非同期処理（テキストデータ送信）
-    await mockSendTextData(textData);
+    await mockSendTextData(receiptData);
 
     // 非同期処理が完了したら/save_completeに遷移
     window.location.href = "/save_complete";
